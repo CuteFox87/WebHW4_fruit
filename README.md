@@ -62,6 +62,7 @@
 | `last_updated` | 最後更新時間（ISO 格式）     |
 
 ---
+## How to Run
 
 ### Run Manually
 #### Frontend
@@ -86,5 +87,5 @@ chmod +x ./tmux_start.sh
 
 ### Run with docker compose
 ```
-docker compose up -d
+docker compose up -d --build
 ```
