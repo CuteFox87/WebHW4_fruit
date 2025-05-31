@@ -1,7 +1,7 @@
 # WebHW4_fruit
 
 ## Demo Website
-[fruit.nyanfox.com](fruit.nyanfox.com)
+[fruit.nyanfox.com](https://fruit.nyanfox.com)
 
 ## Description
 
