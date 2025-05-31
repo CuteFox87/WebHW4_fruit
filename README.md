@@ -1,5 +1,8 @@
 # WebHW4_fruit
 
+## Demo Website
+[fruit.nyanfox.com](fruit.nyanfox.com)
+
 ## Description
 
 一個結合前端視覺化與後端 API 的即時資料查詢平台，透過 Vue + Express 架構，串接 [twfood.cc](https://www.twfood.cc) 公開 API，實現農產品（酪梨、鳳梨、香蕉）價格與交易量的歷年數據查詢、圖表分析與 CSV 匯出功能。
