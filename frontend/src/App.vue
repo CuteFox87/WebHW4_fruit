@@ -145,7 +145,7 @@ import { Line } from 'vue-chartjs'
 ChartJS.register(Title, Tooltip, Legend, LineElement, PointElement, BarElement, CategoryScale, LinearScale)
 
 const items = ref([])
-const fruit = ref('G3')
+const fruit = ref('A1')
 const year = ref('')
 const lastUpdated = ref('')
 const isLoading = ref(false)

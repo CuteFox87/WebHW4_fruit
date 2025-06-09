@@ -1,7 +1,7 @@
-const sqlite3 = require('sqlite3').verbose()
-const db = new sqlite3.Database('./items.db')
+const Database = require('better-sqlite3')
+const db = new Database('./items.db')
 
-db.run(`CREATE TABLE IF NOT EXISTS items (
+db.exec(`CREATE TABLE IF NOT EXISTS items (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   fruit_id TEXT,
   fruit_name TEXT,
@@ -11,7 +11,7 @@ db.run(`CREATE TABLE IF NOT EXISTS items (
   kg INTEGER
 )`)
 
-db.run(`CREATE TABLE IF NOT EXISTS meta (
+db.exec(`CREATE TABLE IF NOT EXISTS meta (
   key TEXT PRIMARY KEY,
   value TEXT
 )`)

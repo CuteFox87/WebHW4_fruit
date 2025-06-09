@@ -26,7 +26,7 @@ fi
 cd "$PROJECT_DIR"
 tmux new-session -d -s $SESSION_NAME
 
-tmux send-keys -t $SESSION_NAME:0 "cd backend && npm install && npm run dev" C-m
+tmux send-keys -t $SESSION_NAME:0 "cd backend && npm install && npm run start" C-m
 tmux split-window -h -t $SESSION_NAME
 tmux send-keys -t $SESSION_NAME:0.1 "cd frontend && npm install && npm run dev" C-m
 

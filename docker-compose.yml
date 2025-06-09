@@ -7,7 +7,7 @@ services:
       - "5173:5173"
     volumes:
       - ./frontend:/app
-      - /app/node_modules
+        # - /app/node_modules
     networks:
       - webnet
 
@@ -18,7 +18,7 @@ services:
       - "3000:3000"
     volumes:
       - ./backend:/app
-      - /app/node_modules
+        # - /app/node_modules
     networks:
       - webnet
 

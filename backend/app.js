@@ -39,7 +39,7 @@ app.post('/api/refresh', async (req, res) => {
 
       await new Promise((resolve, reject) => {
         db.serialize(() => {
-          db.run('DELETE FROM items WHERE fruit_id = ?', [fruit_id], (err) => {
+          db.exec('DELETE FROM items WHERE fruit_id = ?', [fruit_id], (err) => {
             if (err) return reject(err)
 
             const stmt = db.prepare(`INSERT INTO items (fruit_id, fruit_name, year, endDay, avgPrice, kg) VALUES (?, ?, ?, ?, ?, ?)`)
@@ -67,7 +67,7 @@ app.post('/api/refresh', async (req, res) => {
       totalInserted += data.length
     }
 
-    db.run(`REPLACE INTO meta (key, value) VALUES (?, ?)`, ['last_updated', new Date().toISOString()], (err) => {
+    db.exec(`REPLACE INTO meta (key, value) VALUES (?, ?)`, ['last_updated', new Date().toISOString()], (err) => {
       if (err) return res.status(500).json({ error: '更新 meta 失敗: ' + err.message })
       res.json({ status: 'ok', total: totalInserted })
     })
