@@ -18,52 +18,64 @@ app.use((req, res, next) => {
 
 app.post('/api/refresh', async (req, res) => {
   try {
-    const fruit_id = 'G3'
-    const fruit_name = '酪梨'
-    const url = `https://www.twfood.cc/api/FarmTradeSumYears?filter=${encodeURIComponent(JSON.stringify({ order: 'endDay asc', where: { itemCode: fruit_id } }))}`
-    const { data } = await axios.get(url)
+    const fruits = [
+      { id: 'A1', name: '香蕉' },
+      { id: 'B2', name: '鳳梨（金鑽鳳梨）' },
+      { id: 'G3', name: '酪梨' },
+      { id: 'X6', name: '蘋果（富士）' },
+      { id: 'T1', name: '西瓜（大西瓜）' },
+      { id: 'S1', name: '葡萄（巨峰）' },
+      { id: 'C1', name: '椪柑（橘子）' },
+      { id: '45', name: '草莓' },
+      { id: 'R1', name: '芒果（愛文）' },
+      { id: 'Y1', name: '水蜜桃' }
+    ]
 
-    db.serialize(() => {
-      db.run('DELETE FROM items WHERE fruit_id = ?', [fruit_id], function (err) {
-        if (err) return res.status(500).json({ error: '刪除失敗: ' + err.message })
+    let totalInserted = 0
 
-        const stmt = db.prepare(`INSERT INTO items (fruit_id, fruit_name, year, endDay, avgPrice, kg) VALUES (?, ?, ?, ?, ?, ?)`)
-        let completed = 0
+    for (const { id: fruit_id, name: fruit_name } of fruits) {
+      const url = `https://www.twfood.cc/api/FarmTradeSumYears?filter=${encodeURIComponent(JSON.stringify({ order: 'endDay asc', where: { itemCode: fruit_id } }))}`
+      const { data } = await axios.get(url)
 
-        for (const item of data) {
-          stmt.run([fruit_id, fruit_name, item.year, item.endDay, item.avgPrice, item.kg], function (err) {
-            if (err) {
-              console.error('寫入失敗:', err)
+      await new Promise((resolve, reject) => {
+        db.serialize(() => {
+          db.run('DELETE FROM items WHERE fruit_id = ?', [fruit_id], (err) => {
+            if (err) return reject(err)
+
+            const stmt = db.prepare(`INSERT INTO items (fruit_id, fruit_name, year, endDay, avgPrice, kg) VALUES (?, ?, ?, ?, ?, ?)`)
+            let completed = 0
+
+            if (data.length === 0) {
+              stmt.finalize(resolve)
               return
             }
 
-            completed++
-            if (completed === data.length) {
-              stmt.finalize(() => {
-                db.run(`REPLACE INTO meta (key, value) VALUES (?, ?)`, ['last_updated', new Date().toISOString()], (err) => {
-                  if (err) return res.status(500).json({ error: '更新 meta 失敗: ' + err.message })
-                  res.json({ status: 'ok', count: data.length })
-                })
+            for (const item of data) {
+              stmt.run([fruit_id, fruit_name, item.year, item.endDay, item.avgPrice, item.kg], (err) => {
+                if (err) return reject(err)
+
+                completed++
+                if (completed === data.length) {
+                  stmt.finalize(() => resolve())
+                }
               })
             }
           })
-        }
-
-        // 特別處理空資料時也要 finalize 並繼續後續操作
-        if (data.length === 0) {
-          stmt.finalize(() => {
-            db.run(`REPLACE INTO meta (key, value) VALUES (?, ?)`, ['last_updated', new Date().toISOString()], (err) => {
-              if (err) return res.status(500).json({ error: '更新 meta 失敗: ' + err.message })
-              res.json({ status: 'ok', count: 0 })
-            })
-          })
-        }
+        })
       })
+
+      totalInserted += data.length
+    }
+
+    db.run(`REPLACE INTO meta (key, value) VALUES (?, ?)`, ['last_updated', new Date().toISOString()], (err) => {
+      if (err) return res.status(500).json({ error: '更新 meta 失敗: ' + err.message })
+      res.json({ status: 'ok', total: totalInserted })
     })
   } catch (err) {
-    res.status(500).json({ error: '下載失敗: ' + err.message })
+    res.status(500).json({ error: '處理失敗: ' + err.message })
   }
 })
+
 
 
 function buildYearQueryClause(query, params, year) {

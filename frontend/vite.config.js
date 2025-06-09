@@ -6,8 +6,9 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     host: '0.0.0.0',
+    allowedHosts: ['fruit.nyanfox.com'],
     proxy: {
-      '/api': 'http://backend:3000'
+      '/api': 'http://0.0.0.0:3000'
     }
   }
 })

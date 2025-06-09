@@ -43,9 +43,16 @@
             <select v-model="fruit" class="border rounded-lg px-3 py-2 bg-gradient-to-r from-white to-gray-100 text-gray-800 shadow-inner focus:outline-none">
 
               <option disabled value="">請選擇</option>
+              <option value="A1">🍌 香蕉</option>
+              <option value="B2">🍍 鳳梨（金鑽鳳梨）</option>
               <option value="G3">🥑 酪梨</option>
-              <option value="L1">🍍 鳳梨</option>
-              <option value="B2">🍌 香蕉</option>
+              <option value="X6">🍎 蘋果（富士）</option>
+              <option value="T1">🍉 西瓜（大西瓜）</option>
+              <option value="S1">🍇 葡萄（巨峰）</option>
+              <option value="C1">🍊 椪柑（橘子）</option>
+              <option value="45">🍓 草莓</option>
+              <option value="R1">🥭 芒果（愛文）</option>
+              <option value="Y1">🍑 水蜜桃</option>
             </select>
           </div>
 
@@ -300,4 +307,9 @@ watch(items, () => {
 </script>
 
 <style scoped>
+select option {
+  background-color: #1f2937 !important;
+  color: #ffffff !important; /* text-gray-800 */
+}
 </style>
+
